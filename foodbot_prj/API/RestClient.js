@@ -56,25 +56,24 @@ exports.deleteFavouriteFood = function deleteData(url,session, username ,favouri
 
 };
 
+exports.getYelpData = function getData(url,bearer,session, callback){
+    
+        request.get(url,{'auth': { 'bearer': bearer}} ,function(err,res,body){
+            if(err){
+                console.log(err);
+            }else {
+                callback(body,session);
+            }
+        });
+    };
 
-exports.getAccountData = function getData(url, session, account, callback){
-	request.get(url, {'headers':{'ZUMO-API-VERSION': '2.0.0'}}, function handleGetResponse(err,res,body) }, 
-		if (err) {
-			console.log(err);
-		} else {
-			callback(body, session, account);
-		}
-	});
-};
-
-
-exports.getExchangeRate = function getData(session, url, base, symbol, callback){
-	request.get(url, function(err,res,body){
-		if(err){
-			console.log(err);
-		} else {
-			callback(session, body, base, symbol);
-		}
-	});
-}
-
+exports.getNutritionData = function getData(url, session, foodName, callback){
+    
+        request.get(url, function processGetRequest(err,res,body){
+            if(err){
+                console.log(err);
+            }else {
+                callback(body, foodName, session);
+            }
+        });
+    };
