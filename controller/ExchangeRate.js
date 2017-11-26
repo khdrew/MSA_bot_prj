@@ -2,7 +2,7 @@ var rest = require('../API/RestClient');
 
 exports.displayExchangeRate = function (session, base, symbol) {
 	var url = 'https://api.fixer.io/latest?base=' + base + '&symbols=' + symbol; // build url
-	rest.getExchangeRate(session, url, base, symbol, extractRate); // call api
+	rest.getExchangeRate(url, session, base, symbol, extractRate); // call api
 };
 
 

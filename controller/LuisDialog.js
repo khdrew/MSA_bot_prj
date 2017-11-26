@@ -1,6 +1,7 @@
 var builder = require('botbuilder');
 var food = require('../controller/FavouriteFoods');
 var xe = require('../controller/ExchangeRate');
+var accs = require('../controller/AccountsData');
 // Some sections have been omitted
 
 
@@ -27,6 +28,7 @@ exports.startDialog = function (bot) {
             if(!isAttachment(session)){
                 if (results.response) {
                     session.conversationData["account"] = results.response;
+                    accs.checkAccounts(session, session.conversationData["account"]);
                     session.send("Account number: " + session.conversationData["account"]);
                 } else {
                     session.send("How can I help you?");
@@ -61,6 +63,33 @@ exports.startDialog = function (bot) {
     }).triggerAction({
         matches: 'ExchangeRate'
     });
+
+
+    bot.dialog('DeleteAccount', function (session, args) {
+        if (!isAttachment(session)) {
+            var deleteTarget = builder.EntityRecognizer.findEntity(args.intent.entities, 'deleteTarget');
+            var accVal = session.conversationData["account"];
+            
+            if (deleteTarget) {
+                session.send("Request delete %s account...", deleteTarget.entity.toString());
+                accs.deleteAccount(session, deleteTarget.entity.toString());
+                if (!(typeof accVal === "undefined" || accVal === null)) { 
+                    if (deleteTarget == accVal) {
+                        session.conversationData["account"] = null;
+                    }
+                }
+            } else if (!(typeof accVal === "undefined" || accVal === null)) { 
+                session.send("Request delete %s account...", session.conversationData["account"]);
+                accs.deleteAccount(session, accVal);
+                session.conversationData["account"] = null;
+            } else {
+                session.send("No target account to delete.");
+            }
+        }
+    }).triggerAction({
+        matches: 'DeleteAccount'
+    });
+
 
    
 
