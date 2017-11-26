@@ -42,3 +42,17 @@ exports.deleteAccount = function deleteAccount(session, account){
 		}
 	});
 }
+
+exports.getAccountBalance = function getAccountBalance(session, account) {
+	var url = 'http://contosobotapp.azurewebsites.net/tables/AccountsTable';
+	rest.getAccountsData(url, session, account, function (message, session, account) {
+		var accountsList = JSON.parse(message);
+		for (var index in accountsList) {
+			if (accountsList[index].account == account) {
+				session.send("Account balance for %s is at $%f.", account, accountsList[index].balance);	
+			}
+		}
+	});
+}
+
+

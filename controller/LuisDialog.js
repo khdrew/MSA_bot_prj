@@ -30,8 +30,10 @@ exports.startDialog = function (bot) {
                     session.conversationData["account"] = results.response;
                     accs.checkAccounts(session, session.conversationData["account"]);
                     session.send("Account number: " + session.conversationData["account"]);
+                    session.send("How can I help you? Check exchange rate, delete accounts, check balance or check insurance possiblities (post a picture)? ");
                 } else {
-                    session.send("How can I help you?");
+                    session.send("Account number: " + session.conversationData["account"]);
+                    session.send("How can I help you? Check exchange rate, delete accounts, check balance or check insurance possiblities (post a picture)? ");
                 }                
             }
         }        
@@ -75,13 +77,13 @@ exports.startDialog = function (bot) {
                 accs.deleteAccount(session, deleteTarget.entity.toString());
                 if (!(typeof accVal === "undefined" || accVal === null)) { 
                     if (deleteTarget == accVal) {
-                        session.conversationData["account"] = null;
+                        logout_account(session);
                     }
                 }
             } else if (!(typeof accVal === "undefined" || accVal === null)) { 
                 session.send("Request delete %s account...", session.conversationData["account"]);
                 accs.deleteAccount(session, accVal);
-                session.conversationData["account"] = null;
+                logout_account(session);
             } else {
                 session.send("No target account to delete.");
             }
@@ -91,94 +93,43 @@ exports.startDialog = function (bot) {
     });
 
 
+    bot.dialog('CheckBalance', function (session, args) {
+        if (!isAttachment(session)) {
+            var accVal = session.conversationData["account"];
+            if (!(typeof accVal === "undefined" || accVal === null)) { 
+                session.send("Checking balance of %s...", accVal);
+                accs.getAccountBalance(session, accVal);
+            } else {
+                session.send("No target account to check balance.");
+            }
+        }
+    }).triggerAction({
+        matches: 'CheckBalance'
+    });
+
+
+    // bot.dialog('ChangeAccount', function (session, args) {
+    //     if (!isAttachment(session)) {
+    //         var accVal = session.conversationData["account"];
+    //         if (!(typeof accVal === "undefined" || accVal === null)) { 
+    //             session.send("Checking balance of %s...", accVal);
+    //             accs.getAccountBalance(session, accVal);
+    //         } else {
+    //             session.send("No target account to check balance.");
+    //         }
+    //     }
+    // }).triggerAction({
+    //     matches: 'ChangeAccount'
+    // });
+
+
+
+
+    function logout_account(session){
+        session.conversationData["account"] = null;
+    }
+
    
-
-    // bot.dialog('GetCalories', function (session, args) {
-    //     if (!isAttachment(session)) {
-
-    //         // Pulls out the food entity from the session if it exists
-    //         var foodEntity = builder.EntityRecognizer.findEntity(args.intent.entities, 'food');
-
-    //         // Checks if the for entity was found
-    //         if (foodEntity) {
-    //             session.send('Calculating calories in %s...', foodEntity.entity);
-    //            // Here you would call a function to get the foods nutrition information
-
-    //         } else {
-    //             session.send("GetCalories");
-    //             session.send("No food identified! Please try again");
-    //         }
-    //     }
-    // }).triggerAction({
-    //     matches: 'GetCalories'
-    // });
-
-
-    // bot.dialog('GetFavouriteFood', [
-    //     function (session, args, next) {
-    //         session.dialogData.args = args || {};        
-    //         if (!session.conversationData["username"]) {
-    //             builder.Prompts.text(session, "Enter a username to setup your account.");                
-    //         } else {
-    //             next(); // Skip if we already have this info.
-    //         }
-    //     },
-    //     function (session, results, next) {
-    //         if (!isAttachment(session)) {
-
-    //             if (results.response) {
-    //                 session.conversationData["username"] = results.response;
-    //             }
-
-    //             session.send("Retrieving your favourite foods for: " + session.conversationData["username"]);
-    //             food.displayFavouriteFood(session, session.conversationData["username"]);  // <---- THIS LINE HERE IS WHAT WE NEED 
-    //         }
-    //     }
-    // ]).triggerAction({
-    //     matches: 'GetFavouriteFood'
-    // });
-
-    // bot.dialog('LookForFavourite', [
-    //     function (session, args, next) {
-    //         session.dialogData.args = args || {};        
-    //         if (!session.conversationData["username"]) {
-    //             builder.Prompts.text(session, "Enter a username to setup your account.");                
-    //         } else {
-    //             next(); // Skip if we already have this info.
-    //         }
-    //     },
-    //     function (session, results, next) {
-    //         if (!isAttachment(session)) {
-
-    //             if (results.response) {
-    //                 session.conversationData["username"] = results.response;
-    //             }
-    //             // Pulls out the food entity from the session if it exists
-    //             var foodEntity = builder.EntityRecognizer.findEntity(session.dialogData.args.intent.entities, 'food');
-    
-    //             // Checks if the food entity was found
-    //             if (foodEntity) {
-    //                 session.send('Thanks for telling me that \'%s\' is your favourite food', foodEntity.entity);
-    //                 food.sendFavouriteFood(session, session.conversationData["username"], foodEntity.entity); // <-- LINE WE WANT    
-    //             } else {
-    //                 session.send("No food identified!!!");
-    //             }
-    //         }
-    //     }
-    // ]).triggerAction({
-    //     matches: 'LookForFavourite'
-    // });
-
-
-    // bot.dialog('WelcomeIntent', function (session, args) {
-    //     if (!isAttachment(session)) {
-    //         session.send("g'day mate");
-    //     }
-
-    // }).triggerAction({
-    //     matches: 'WelcomeIntent'
-    // });
-
     // Function is called when the user inputs an attachment
     function isAttachment(session) { 
         var msg = session.message.text;
@@ -191,25 +142,6 @@ exports.startDialog = function (bot) {
             return false;
         }
     }
-
-    //     function (session, results,next) {
-    //         if (!isAttachment(session)) {
-
-    //             session.send("You want to delete one of your favourite foods.");
-
-    //             // Pulls out the food entity from the session if it exists
-    //             var foodEntity = builder.EntityRecognizer.findEntity(session.dialogData.args.intent.entities, 'food');
-
-    //             // Checks if the for entity was found
-    //             if (foodEntity) {
-    //                 session.send('Deleting \'%s\'...', foodEntity.entity);
-    //                 food.deleteFavouriteFood(session,session.conversationData['username'],foodEntity.entity); //<--- CALLL WE WANT
-    //             } else {
-    //                 session.send("No food identified! Please try again");
-    //             }
-    //         }
-    //     }
-
 
 
 }
