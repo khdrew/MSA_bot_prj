@@ -2,6 +2,7 @@ var builder = require('botbuilder');
 var food = require('../controller/FavouriteFoods');
 var xe = require('../controller/ExchangeRate');
 var accs = require('../controller/AccountsData');
+var customvision = require('../controller/CustomVision');
 // Some sections have been omitted
 
 
@@ -134,14 +135,15 @@ exports.startDialog = function (bot) {
     function isAttachment(session) { 
         var msg = session.message.text;
         if ((session.message.attachments && session.message.attachments.length > 0) || msg.includes("http")) {
-
-            //call custom vision here later
+            customvision.retrieveMessage(session);
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
+
+
+
 
 
 }
