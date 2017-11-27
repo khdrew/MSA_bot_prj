@@ -1,7 +1,12 @@
 var rest = require('../API/RestClient');
 
+function getTableUrl() {
+	return 'http://foodbot69.azurewebsites.net/tables/FoodTable';
+}
+
 exports.checkAccounts = function isExistingAcc(session, account){
-	var url = 'http://contosobotapp.azurewebsites.net/tables/AccountsTable';
+	// var url = 'http://contosobotapp.azurewebsites.net/tables/AccountsTable';
+	var url = getTableUrl();
 	rest.getAccountsData(url, session, account, handleMakeAccounts);
 }
 
@@ -22,13 +27,15 @@ function handleMakeAccounts (message, session, account) {
 }
 
 function makeNewAccount (account, session) {
-	var url = 'http://contosobotapp.azurewebsites.net/tables/AccountsTable';
+	// var url = 'http://contosobotapp.azurewebsites.net/tables/AccountsTable';
+	var url = getTableUrl();
 	rest.postAccountsData(url, account, session);
 	session.send("New account created.");
 }
 
 exports.deleteAccount = function deleteAccount(session, account){
-	var url  = 'http://contosobotapp.azurewebsites.net/tables/AccountsTable';
+	// var url  = 'http://contosobotapp.azurewebsites.net/tables/AccountsTable';
+	var url = getTableUrl();
 	rest.getAccountsData(url, session, account, function (message, session, account){
 		var accountsList = JSON.parse(message);
 		for (var index in accountsList) {
@@ -44,7 +51,8 @@ exports.deleteAccount = function deleteAccount(session, account){
 }
 
 exports.getAccountBalance = function getAccountBalance(session, account) {
-	var url = 'http://contosobotapp.azurewebsites.net/tables/AccountsTable';
+	// var url = 'http://contosobotapp.azurewebsites.net/tables/AccountsTable';
+	var url = getTableUrl();
 	rest.getAccountsData(url, session, account, function (message, session, account) {
 		var accountsList = JSON.parse(message);
 		for (var index in accountsList) {

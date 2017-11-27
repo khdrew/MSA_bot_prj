@@ -68,6 +68,18 @@ exports.startDialog = function (bot) {
     });
 
 
+    bot.dialog('ListExchangeRates', function (session, args) {
+        if (!isAttachment(session)) {
+            // Pulls out the currency targets from the session if it exists
+            session.send('Retrieving exchange rates data...');
+            xe.listExchangeRates(session);
+        }
+
+    }).triggerAction({
+        matches: 'ListExchangeRates'
+    });
+
+
     bot.dialog('DeleteAccount', function (session, args) {
         if (!isAttachment(session)) {
             var deleteTarget = builder.EntityRecognizer.findEntity(args.intent.entities, 'deleteTarget');
