@@ -2,7 +2,7 @@ var builder = require('botbuilder');
 var food = require('../controller/FavouriteFoods');
 var xe = require('../controller/ExchangeRate');
 var accs = require('../controller/AccountsData');
-var customvision = require('../controller/CustomVision');
+var customVision = require('../controller/CustomVision');
 // Some sections have been omitted
 
 
@@ -31,10 +31,10 @@ exports.startDialog = function (bot) {
                     session.conversationData["account"] = results.response;
                     accs.checkAccounts(session, session.conversationData["account"]);
                     session.send("Account number: " + session.conversationData["account"]);
-                    session.send("How can I help you? Check exchange rate, delete accounts, check balance or check insurance possiblities (post a picture)? ");
+                    session.send("How can I help you? Check exchange rate, delete accounts, check balance or check insurance possiblities (post a picture link)? ");
                 } else {
                     session.send("Account number: " + session.conversationData["account"]);
-                    session.send("How can I help you? Check exchange rate, delete accounts, check balance or check insurance possiblities (post a picture)? ");
+                    session.send("How can I help you? Check exchange rate, delete accounts, check balance or check insurance possiblities (post a picture link)? ");
                 }                
             }
         }        
@@ -109,20 +109,26 @@ exports.startDialog = function (bot) {
     });
 
 
-    // bot.dialog('ChangeAccount', function (session, args) {
-    //     if (!isAttachment(session)) {
-    //         var accVal = session.conversationData["account"];
-    //         if (!(typeof accVal === "undefined" || accVal === null)) { 
-    //             session.send("Checking balance of %s...", accVal);
-    //             accs.getAccountBalance(session, accVal);
-    //         } else {
-    //             session.send("No target account to check balance.");
-    //         }
-    //     }
-    // }).triggerAction({
-    //     matches: 'ChangeAccount'
-    // });
+    bot.dialog('ChangeAccount', function (session, args) {
+        if (!isAttachment(session)) {
+            var accVal = session.conversationData["account"];
+            if (!(typeof accVal === "undefined" || accVal === null)) { 
+                session.send("Checking out of %s account...", accVal);
+                logout_account(session);
+            } else {
+                session.send("No target account to check balance.");
+            }
+        }
+    }).triggerAction({
+        matches: 'ChangeAccount'
+    });
 
+
+    bot.dialog('Link', function (session, args) {
+        isAttachment(session);
+    }).triggerAction({
+        matches: 'Link'
+    });
 
 
 
@@ -134,21 +140,34 @@ exports.startDialog = function (bot) {
     // Function is called when the user inputs an attachment
     function isAttachment(session) { 
         var msg = session.message.text;
-        if ((session.message.attachments && session.message.attachments.length > 0) || msg.includes("http")) {
-            customvision.retrieveMessage(session);
+        if (msg.includes("http")) {
+            session.send('Calling custom vision processing for link...');
+            customVision.retrieveMessage(session);
             return true;
+        } else if (session.message.attachments && session.message.attachments.length > 0) {
+            session.send('Calling custom vision processing for image...');
+            customVision.retrieveMessageImage(session);
         } else {
             return false;
         }
     }
 
-
-
-
-
 }
 
 
-
+    // Function is called when the user inputs an attachment
+    exports.isAttachment = function isAttachment(session){ 
+        var msg = session.message.text;
+        if (msg.includes("http")) {
+            session.send('Calling custom vision processing for link...');
+            customVision.retrieveMessage(session);
+            return true;
+        } else if (session.message.attachments && session.message.attachments.length > 0) {
+            session.send('Calling custom vision processing for image...');
+            customVision.retrieveMessageImage(session);
+        } else {
+            return false;
+        }
+    }
 
 

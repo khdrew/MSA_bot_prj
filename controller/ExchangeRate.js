@@ -11,7 +11,7 @@ function extractRate (session, message, base, symbol) {
 	if (ratesResponse.base == base) {
 		for (var i in ratesResponse.rates) { // compute and send message
 			if (i.toString() == symbol) {
-				session.send('Converstion rate 1 NZD to %s %s.', ratesResponse.rates[i].toString(), symbol);
+				session.send('Converstion rate 1 %s to %s %s.', base, ratesResponse.rates[i].toString(), symbol);
 			}
 		}
 	}
