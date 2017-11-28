@@ -40,7 +40,19 @@ exports.retrieveMessageImage = function (session){
 
 function validResponse(body){
     if (body && body.Predictions && body.Predictions[0].Tag){
-        return "This is " + body.Predictions[0].Tag
+        var output = ""
+        switch(body.Predictions[0].Tag) {
+            case 'car':
+                output += 'Looking for vehicle insurance?';
+                break;
+            case 'house':
+                output += 'Looking for house insurance?';
+                break;
+            case 'life':
+                output += 'Looking for health insurance?';
+                break;
+        }
+        return output
     } else{
         console.log('Oops, please try again!');
         console.log(body);
