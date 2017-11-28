@@ -21,7 +21,7 @@ function extractRate (session, message, base, symbol) {
 						builder.CardImage.create(session, 'http://flags.fmcdn.net/data/flags/w580/' + symbol.toLowerCase().substring(0,2) + '.png')])
 					.buttons([builder.CardAction.openUrl(session, 'https://finance.google.com/finance/converter', 'More Conversions')]);
 				attachment.push(card);
-				session.send('Converstion rate 1 %s to %s %s.', base, ratesResponse.rates[i].toString(), symbol);
+				// session.send('Converstion rate 1 %s to %s %s.', base, ratesResponse.rates[i].toString(), symbol);
 				symbolFound = true;
 			}
 		}
