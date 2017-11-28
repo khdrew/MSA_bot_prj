@@ -19,7 +19,7 @@ function extractRate (session, message, base, symbol) {
 					.text('Converstion rate 1 ' + base + ' to ' + ratesResponse.rates[i].toString() + ' ' + symbol + '.')
 					.images([builder.CardImage.create(session, 'http://flags.fmcdn.net/data/flags/w580/' + base.toLowerCase().substring(0,2) + '.png'),
 						builder.CardImage.create(session, 'http://flags.fmcdn.net/data/flags/w580/' + symbol.toLowerCase().substring(0,2) + '.png')])
-					.buttons([builder.CardAction.openUrl(session, 'https://finance.google.com/finance/converter', 'More Exchange Rate Conversions')]);
+					.buttons([builder.CardAction.openUrl(session, 'https://finance.google.com/finance/converter', 'More Conversions')]);
 				attachment.push(card);
 				session.send('Converstion rate 1 %s to %s %s.', base, ratesResponse.rates[i].toString(), symbol);
 				symbolFound = true;
@@ -60,7 +60,7 @@ exports.listExchangeRates = function (session) {
 			.title(title)
 			.text(text)
 			// .images(imgArray)
-			.buttons([builder.CardAction.openUrl(session, 'https://finance.google.com/finance/converter', 'More Exchange Rate Conversions')]);
+			.buttons([builder.CardAction.openUrl(session, 'https://finance.google.com/finance/converter', 'More Conversions')]);
 		attachment.push(card);
 		var message = new builder.Message(session)
 			.attachmentLayout(builder.AttachmentLayout.carousel)
