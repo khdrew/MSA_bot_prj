@@ -3,7 +3,7 @@ var request = require('request'); //node module for http post requests
 exports.retrieveMessage = function (session){
     console.log(">>>>>> " + session.message.text);
     request.post({
-        url: 'https://southcentralus.api.cognitive.microsoft.com/customvision/v1.0/Prediction/dca47af4-ff87-40ce-a937-340dff634c3b/url?iterationId=30ff3586-eeb7-4c9b-aef6-7d2583b1a7c8',
+        url: 'https://southcentralus.api.cognitive.microsoft.com/customvision/v1.0/Prediction/dca47af4-ff87-40ce-a937-340dff634c3b/url?iterationId=d12a60b7-7473-48ee-90dc-be01cb557892',
       //url: 'https://southcentralus.api.cognitive.microsoft.com/customvision/v1.0/Prediction/dca47af4-ff87-40ce-a937-340dff634c3b/image?iterationId=30ff3586-eeb7-4c9b-aef6-7d2583b1a7c8'
         json: true,
         headers: {
@@ -41,6 +41,7 @@ exports.retrieveMessageImage = function (session){
 function validResponse(body){
     if (body && body.Predictions && body.Predictions[0].Tag){
         var output = ""
+        // console.log(body)
         switch(body.Predictions[0].Tag) {
             case 'car':
                 output += 'Looking for vehicle insurance?';
