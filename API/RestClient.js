@@ -40,7 +40,31 @@ exports.getSingleExchangeRate = function getSingleExchangeRateData(url, session,
     });
 }
 
+exports.patchAccountsData = function patchAccountsData (url, session, id, balance, symbol, amount) {
+    var options = { // construct data
+        url: url,
+        method: 'PATCH',
+        headers: {
+            'ZUMO-API-VERSION': '2.0.0',
+            'Content-Type':'application/json'
+        },
+        json: {
+            "id" : id,
+            "balance" : balance,
+        }
+    };
+    options.json[symbol] = amount;
 
+    // request post
+    request(options, function (error, response, body) {
+        if (!error && response.sendAccountDataatusCode === 200) {
+            console.log(body);
+        }
+        else{
+            console.log(error);
+        }
+    });
+}
 
 exports.postAccountsData = function sendAccountData(url, account, session){
 	var options = { // construct data

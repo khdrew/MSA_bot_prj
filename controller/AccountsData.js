@@ -2,7 +2,7 @@ var rest = require('../API/RestClient');
 var xe = require('../controller/ExchangeRate');
 
 function getTableUrl() {
-	return 'http://foodbot69.azurewebsites.net/tables/FoodTable';
+	return 'http://foodbot69.azurewebsites.net/tables/AccountsTable';
 }
 
 exports.checkAccounts = function isExistingAcc(session, account){
@@ -94,12 +94,16 @@ function handleBuy (session, body, id, amount, balance) {
 	var ratesResponse = JSON.parse(body);
 	for (var i in ratesResponse.rates) { // compute and send message
 		var ratio = ratesResponse.rates[i];
-		// var totalCost = (amount/ratio).toString();
-		ratio = ratio.toString();
-		// session.send(ratio);
-		session.send("Your balance is %f, %s. buy %s %s", parseFloat(balance), id.toString(), amount.toString(), i.toString());
-
+		var totalCost = (amount/ratio).toFixed(2);
+		session.send("Your balance is %f. With a NZD/USD rate of %f, you must spend %f NZD to buy %f %s", balance, ratio, totalCost, amount, i.toString());
+		if (balance >= totalCost) {
+			console.log("ID: " + id);
+			var url = getTableUrl();
+			var newBalance = (balance - totalCost).toFixed(2);
+			rest.patchAccountsData(url, session, id, newBalance, i.toString(), amount);
+			session.send("Buy request complete. Your new balance is: $" + newBalance + ". To review your foriegn currency balance, wait for the next version of this chatbot.");
+		} else {
+			session.send("Sorry, you do not have enough balance to buy.");
+		}
 	}
-
-
 }

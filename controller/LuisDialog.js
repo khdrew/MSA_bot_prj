@@ -78,8 +78,7 @@ exports.startDialog = function (bot) {
             if (targetCurrency && amount) {
                 targetCurrency = targetCurrency.entity.toString().toUpperCase();
                 amount = parseFloat(amount.entity.toString().replace(/ /g, ""));
-                session.send("Buying %f %s...", amount, targetCurrency);
-                accs.buyCurrency(session, targetCurrency, amount);
+                accs.buyCurrency(session, targetCurrency, amount.toFixed(2));
             } else {
                 session.send("No target currencies identified! Please try again");
             }
