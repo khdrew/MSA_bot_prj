@@ -68,6 +68,28 @@ exports.startDialog = function (bot) {
     });
 
 
+    bot.dialog('BuyCurrency', function (session, args) {
+        if (!isAttachment(session)) {
+            // Pulls out the currency targets from the session if it exists
+            session.send('Processing buy request...');
+            var targetCurrency = builder.EntityRecognizer.findEntity(args.intent.entities, 'targetCurrency');
+            var amount = builder.EntityRecognizer.findEntity(args.intent.entities, 'amount');
+            // Checks if the targets was found
+            if (targetCurrency && amount) {
+                targetCurrency = targetCurrency.entity.toString().toUpperCase();
+                amount = parseFloat(amount.entity.toString().replace(/ /g, ""));
+                session.send("Buying %f %s...", amount, targetCurrency);
+                accs.buyCurrency(session, targetCurrency, amount);
+            } else {
+                session.send("No target currencies identified! Please try again");
+            }
+        }
+
+    }).triggerAction({
+        matches: 'BuyCurrency'
+    });
+
+
     bot.dialog('ListExchangeRates', function (session, args) {
         if (!isAttachment(session)) {
             // Pulls out the currency targets from the session if it exists

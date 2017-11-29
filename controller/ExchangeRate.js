@@ -6,6 +6,7 @@ exports.displayExchangeRate = function (session, base, symbol) {
 	rest.getExchangeRate(url, session, base, symbol, extractRate); // call api
 };
 
+exports.xeAPI = function(symbol) { return 'https://api.fixer.io/latest?base=NZD&symbols=' + symbol; }
 
 function extractRate (session, message, base, symbol) {
 	var ratesResponse = JSON.parse(message); // parse JSON

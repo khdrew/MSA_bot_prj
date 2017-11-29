@@ -10,6 +10,15 @@ exports.getAccountsData = function getAccountsData(url, session, account, callba
 	});
 };
 
+exports.accountBuy = function accountBuy(url, session, currency, account, callback){
+    request.get(url, {'headers':{'ZUMO-API-VERSION': '2.0.0'}}, function handleGetResponse(err,res,body) { 
+        if (err) {
+            console.log(err);
+        } else {
+            callback(body, session, currency, account);
+        }
+    });
+};
 
 exports.getExchangeRate = function getExchangeRateData(url, session, base, symbol, callback){
 	request.get(url, function(err,res,body){
@@ -20,6 +29,17 @@ exports.getExchangeRate = function getExchangeRateData(url, session, base, symbo
 		}
 	});
 }
+
+exports.getSingleExchangeRate = function getSingleExchangeRateData(url, session, id, amount, balance, callback){
+    request.get(url, function(err,res,body){
+        if(err){
+            console.log(err);
+        } else {
+            callback(session, body, id, amount, balance)
+        }
+    });
+}
+
 
 
 exports.postAccountsData = function sendAccountData(url, account, session){
@@ -124,6 +144,3 @@ exports.deleteFavouriteFood = function deleteData(url,session, username ,favouri
     })
 
 };
-
-
-
