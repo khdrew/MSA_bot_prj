@@ -65,7 +65,7 @@ The Kalman filter has a multitude of different applications when dealing with da
 
 With this Kalman filtering, a prediction of market trends can be provided to the user, to improve user experiences in making financial investment decisions.
 
-####Reinforcement Learning - Markovian process
+#### Reinforcement Learning - Markovian process
 
 Further improvements can be made on top of the financial prediction functionality. Through Reinforcement Learning or Markovian problem-solving, said predictions can be extended upon. This will provide simulations of said predictions and through experiencing rewards, the bot will come to understand the gravity of going through with certain financial decisions.
 
